@@ -19,19 +19,21 @@ jobs:
         pip install buildozer cython
     - name: Setup Android SDK
       run: |
-        # Create Android SDK directory
-        mkdir -p /home/runner/.buildozer/android/platform/android-sdk
+        # Create Android SDK directory structure
+        mkdir -p /home/runner/.buildozer/android/platform/android-sdk/cmdline-tools/latest
         
         # Download SDK tools
         wget -q https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -O sdk-tools.zip
-        unzip -q sdk-tools.zip -d /home/runner/.buildozer/android/platform/android-sdk
+        unzip -q sdk-tools.zip -d /home/runner/.buildozer/android/platform/android-sdk/cmdline-tools/
+        mv /home/runner/.buildozer/android/platform/android-sdk/cmdline-tools/cmdline-tools/* /home/runner/.buildozer/android/platform/android-sdk/cmdline-tools/latest/
+        rm -rf /home/runner/.buildozer/android/platform/android-sdk/cmdline-tools/cmdline-tools
         rm sdk-tools.zip
         
         # Accept licenses
-        yes | /home/runner/.buildozer/android/platform/android-sdk/cmdline-tools/bin/sdkmanager --sdk_root=/home/runner/.buildozer/android/platform/android-sdk --licenses
+        yes | /home/runner/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=/home/runner/.buildozer/android/platform/android-sdk --licenses
         
         # Install required components
-        /home/runner/.buildozer/android/platform/android-sdk/cmdline-tools/bin/sdkmanager --sdk_root=/home/runner/.buildozer/android/platform/android-sdk "platform-tools" "platforms;android-33" "build-tools;33.0.2"
+        /home/runner/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=/home/runner/.buildozer/android/platform/android-sdk "platform-tools" "platforms;android-33" "build-tools;33.0.2"
     - name: Build APK
       run: |
         # Set environment variables
